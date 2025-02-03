@@ -3,15 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scrollable Image Box & Leaflet Map</title>
+  <title>Reverse Geocoding - Click for Address</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-     crossorigin=""/>
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-     crossorigin=""></script>
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
   <style>
     body {
@@ -25,57 +23,6 @@
       background-color: #f5f5f5;
     }
 
-    h1, h2 {
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-      color: white;
-    }
-
-    h1 {
-      background-color: grey;
-      width: 100%;
-    }
-
-    h2 {
-      background-color: black;
-      width: 100%;
-    }
-
-    .scroll-box {
-      display: flex;
-      overflow-x: auto;
-      width: 80%;
-      background-color: white;
-      padding: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-      gap: 10px;
-    }
-
-    .scroll-box div {
-      min-width: 150px;
-      height: 100px;
-      background-color: #e0e0e0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 14px;
-      font-weight: bold;
-    }
-
-    .scroll-box::-webkit-scrollbar {
-      height: 8px;
-    }
-
-    .scroll-box::-webkit-scrollbar-thumb {
-      background-color: grey;
-      border-radius: 4px;
-    }
-
-    /* Leaflet Map Styles */
     #map {
       width: 80%;
       height: 400px;
@@ -84,35 +31,26 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
+    #address-info {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f0f0f0;
+      border-radius: 8px;
+      width: 80%;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
   </style>
 </head>
 <body>
 
-  <h1>Heading 1</h1>
-  <h2>Heading 2</h2>
-
-  <!-- Scrollable Image Box -->
-  <div class="scroll-box">
-    <div>Image 1</div>
-    <div>Image 2</div>
-    <div>Image 3</div>
-    <div>Image 4</div>
-    <div>Image 5</div>
-    <div>Image 6</div>
-    <div>Image 7</div>
-    <div>Image 8</div>
-    <div>Image 9</div>
-    <div>Image 10</div>
-    <div>Image 11</div>
-    <div>Image 12</div>
-  </div>
-  
+  <h1>Karachi Map - Click to Get Address</h1>
   <div id="map"></div>
+  <div id="address-info">Click on the map to get the address</div>
 
   <script>
-      document.addEventListener("DOMContentLoaded", function () {
-  var map = L.map('map').setView([24.8607, 67.0011], 15); 
-
+    document.addEventListener("DOMContentLoaded", function () {
+      var map = L.map('map').setView([24.8607, 67.0011], 13); // Karachi coordinates
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -127,6 +65,27 @@
         } else {
           marker = L.marker(e.latlng).addTo(map); // Add a new marker
         }
+      });
+
+      // Add click event listener to the map
+      map.on('click', function(e) {
+        var latlng = e.latlng;
+
+        // Make a reverse geocoding request to Nominatim API
+        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latlng.lat}&lon=${latlng.lng}&format=json`)
+          .then(response => response.json())
+          .then(data => {
+            if (data && data.address) {
+              var address = data.display_name || 'Address not found';
+              document.getElementById('address-info').innerHTML = `<strong>Address:</strong> ${address}`;
+            } else {
+              document.getElementById('address-info').innerHTML = '<strong>Address:</strong> Not found';
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching address:', error);
+            document.getElementById('address-info').innerHTML = '<strong>Address:</strong> Error retrieving address';
+          });
       });
     });
   </script>
