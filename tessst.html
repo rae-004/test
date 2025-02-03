@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scrollable Image Box & Leaflet Map</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+
+ <!-- Make sure you put this AFTER Leaflet's CSS -->
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+  <style>
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #f5f5f5;
+    }
+
+    h1, h2 {
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      color: white;
+    }
+
+    h1 {
+      background-color: grey;
+      width: 100%;
+    }
+
+    h2 {
+      background-color: black;
+      width: 100%;
+    }
+
+    .scroll-box {
+      display: flex;
+      overflow-x: auto;
+      width: 80%;
+      background-color: white;
+      padding: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      gap: 10px;
+    }
+
+    .scroll-box div {
+      min-width: 150px;
+      height: 100px;
+      background-color: #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .scroll-box::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .scroll-box::-webkit-scrollbar-thumb {
+      background-color: grey;
+      border-radius: 4px;
+    }
+
+    /* Leaflet Map Styles */
+    #map {
+      width: 80%;
+      height: 400px;
+      margin-top: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>Heading 1</h1>
+  <h2>Heading 2</h2>
+
+  <!-- Scrollable Image Box -->
+  <div class="scroll-box">
+    <div>Image 1</div>
+    <div>Image 2</div>
+    <div>Image 3</div>
+    <div>Image 4</div>
+    <div>Image 5</div>
+    <div>Image 6</div>
+    <div>Image 7</div>
+    <div>Image 8</div>
+    <div>Image 9</div>
+    <div>Image 10</div>
+    <div>Image 11</div>
+    <div>Image 12</div>
+  </div>
+  
+  <div id="map"></div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var map = L.map('map').setView([51.505, -0.09], 13);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+
+      L.marker([51.505, -0.09]).addTo(map)
+        .bindPopup('<b>Hello!</b><br>This is a marker.')
+        .openPopup();
+    });
+  </script>
+
+</body>
