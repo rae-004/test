@@ -11,7 +11,9 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-     crossorigin=""></script>
+     crossorigin=""
+     src="https://unpkg.com/leaflet.glify">
+  </script>
 
   <style>
     body {
@@ -45,7 +47,7 @@
     .scroll-box {
       display: flex;
       overflow-x: auto;
-      width: 80%;
+      width: 22%;
       background-color: white;
       padding: 10px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -76,7 +78,7 @@
     }
 
     #map {
-      width: 80%;
+      width: 100%;
       height: 400px;
       margin-top: 20px;
       border-radius: 8px;
@@ -93,6 +95,19 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
+    /* Custom Marker Style */
+.custom-marker {
+  width: 0px;
+  height: 0px;
+  background-color: rgb(255, 255, 255); /* Change the color of the marker */
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
+  border-top: 50px solid #000000; /* Adjust color */
+  border-radius: 50%;
+   display: flex;
+  justify-content: center;
+  align-items: center;
+}
   </style>
 </head>
 <body>
@@ -116,47 +131,16 @@
     <div>Image 12</div>
   </div>
 
+  <!-- Address Input -->
+  <div style="margin-top: 20px; text-align: center;">
+    <input type="text" id="address-input" placeholder="Enter an address" style="padding: 8px; width: 60%;">
+    <button onclick="searchAddress()" style="padding: 8px 12px; cursor: pointer;">Find</button>
+  </div>
+
   <div id="address-info">Click on the map to get the address</div>  
   <div id="map"></div>
 
-  <script>
-document.addEventListener("DOMContentLoaded", function () {
-  var map = L.map('map').setView([24.8607, 67.0011], 15); 
-
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(map);
-
-  let marker = null; // Declare marker globally
-
-  map.on('click', async function(e) {
-    var latlng = e.latlng;
-
-    // Move existing marker or add a new one
-    if (marker) {
-      marker.setLatLng(latlng);
-    } else {
-      marker = L.marker(latlng).addTo(map);
-    }
-
-    // Make a reverse geocoding request to Nominatim API
-    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latlng.lat}&lon=${latlng.lng}&format=json`)
-      .then(response => response.json())
-      .then(data => {
-        if (data && data.address) {
-          var address = data.display_name || 'Address not found';
-          document.getElementById('address-info').innerHTML = `<strong>Address:</strong> ${address}`;
-        } else {
-          document.getElementById('address-info').innerHTML = '<strong>Address:</strong> Not found';
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching address:', error);
-        document.getElementById('address-info').innerHTML = '<strong>Address:</strong> Error retrieving address';
-      });
-  });
-});
-
+  <script src="scripting.js">
   </script>
 
 </body>
